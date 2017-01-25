@@ -1,0 +1,119 @@
+#! /usr/bin/env ruby
+#
+# Starting from a (binary) file list all contained references to files
+# in the Guix store. This list can be used to create a minimal install
+# file. E.g.
+#
+# ./bin/list-shared-libs ~/.guix-profile/bin/sambamba 2> /dev/null |xargs tar cvzf sambamba.tgz
+
+require 'optparse'
+require 'fileutils'
+
+options = {show_help: false, verbose: false, debug: false}
+
+begin
+
+  rootpath = File.dirname(__FILE__)
+  $: << File.join(rootpath,'lib')
+
+  $stderr.print "list-shared-libs 0.0.1-pre1 Copyright (C) 2017 Pjotr Prins <pjotr.prins@thebird.nl>\n\n"
+  USAGE =<<EOU
+
+  Look for contained references
+
+EOU
+
+  opts = OptionParser.new do |o|
+    o.banner = "Usage: #{File.basename($0)} [options] filename(s)\n\n"
+
+    o.separator "\n\tVerbosity:\n\n"
+
+    # o.on("--patchelf exec", String, "patchelf command") do |p|
+    #   options[:patchelf] = p
+    # end
+
+    o.on("-q", "--quiet", "Run quietly") do |q|
+      options[:quiet] = q
+    end
+
+    o.on("-v", "--verbose", "Run verbosely") do |v|
+      options[:verbose] = v
+    end
+
+    o.on("-d", "--debug", "Show debug messages") do |d|
+      if not options[:debug]
+        options[:debug] = true
+      else
+        options[:debug] = 2
+      end
+    end
+
+    o.on("--development", "Run shorter development version") do |v|
+      options[:development] = v
+    end
+
+    o.separator ""
+
+    o.on_tail('-h', '--help', 'Display this help and exit') do
+      options[:show_help] = true
+    end
+  end
+
+  begin
+    opts.parse!(ARGV)
+
+    if options[:show_help]
+      print opts
+      print USAGE
+    end
+
+  rescue OptionParser::InvalidOption => e
+    options[:invalid_argument] = e.message
+  end
+
+  files = []
+  ARGV.each do | fn |
+    raise "Can not locate #{fn}" if !File.exist?(fn)
+    fn2 = if File.symlink?(fn)
+            File.readlink(fn)
+          else
+            fn
+          end
+    puts File.expand_path(fn2)
+    # use ldd to get shared libs and symlinks
+    ldd = `ldd #{fn2}`
+    list = ldd.split(/\n/).map { |line|
+       line.split.map { |c| File.exist?(c) ? c : nil }
+    }.flatten.compact
+    # Recursive function:
+    expand_on_symlinks = lambda { |lst|
+      lst.map { |fn|
+        if File.symlink? fn
+          target = File.readlink(fn)
+          target2 = if !File.exist? target
+                  File.dirname(fn) + "/" + target
+                else
+                  target
+                end
+
+          raise "#{ln} not found (#{fn})" if not File.exist?(target2)
+          [ fn, expand_on_symlinks.call([target2]) ]
+        else
+          fn
+        end
+      }
+    }
+    files << expand_on_symlinks.call(list)
+  end
+
+  files.flatten.sort.uniq.each do | fn |
+    puts fn
+  end
+rescue => msg
+  if options[:debug]
+    raise
+  else
+    $stderr.print "Error: ",msg,"\n"
+    exit 1
+  end
+end
