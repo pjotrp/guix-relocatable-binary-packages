@@ -1,5 +1,6 @@
 #! /bin/bash
 
+CWD=`pwd`
 BIN=$(readlink -f ~/.guix-profile/bin/ldc2)
 HASH=$(basename $(dirname $(dirname $BIN)))
 
@@ -17,5 +18,6 @@ if [ ! -z $DEBUG ]; then
     tar rvf $TARBALL -h gnu/store/*-ldc-*/bin/*
 fi
 
+exit 1
 echo "Compressing..."
 bzip2 -f $TARBALL
