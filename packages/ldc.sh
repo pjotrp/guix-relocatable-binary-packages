@@ -1,12 +1,12 @@
 #! /bin/bash
 
-CWD=`pwd`
-BIN=$(readlink -f ~/.guix-profile/bin/ldc2)
-HASH=$(basename $(dirname $(dirname $BIN)))
-
 if [ "$1" == "--debug" ]; then
     DEBUG=-debug
 fi
+
+CWD=`pwd`
+BIN=$(readlink -f ~/.guix-profile/bin/ldc2)
+HASH=$(basename $(dirname $(dirname $BIN)))
 
 TARBALL=`pwd`/$HASH$DEBUG-x86_64.tar
 tar cvf $TARBALL -h -C ../gnu-install-bin install.sh installer/
