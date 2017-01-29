@@ -1,4 +1,6 @@
 #! /bin/bash
+#
+# Test with env -i bash --noprofile --norc
 
 if [ "$1" == "--debug" ]; then
     DEBUG=-debug

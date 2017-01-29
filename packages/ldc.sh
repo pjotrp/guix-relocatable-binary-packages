@@ -1,4 +1,6 @@
 #! /bin/bash
+#
+# Creates a binary installation of ldc2 and ldmd2
 
 if [ "$1" == "--debug" ]; then
     DEBUG=-debug
@@ -10,7 +12,7 @@ HASH=$(basename $(dirname $(dirname $BIN)))
 
 TARBALL=`pwd`/$HASH$DEBUG-x86_64.tar
 tar cvf $TARBALL -h -C ../gnu-install-bin install.sh installer/
-./bin/list-shared-libs ~/.guix-profile/bin/ldc2 ~/.guix-profile/bin/ldmd2 2>/dev/null |xargs tar -rvf $TARBALL
+./bin/list-shared-libs $BIN ~/.guix-profile/bin/ldmd2 2>/dev/null |xargs tar -rvf $TARBALL
 tar rvf $TARBALL /gnu/store/$HASH/
 
 if [ ! -z $DEBUG ]; then
