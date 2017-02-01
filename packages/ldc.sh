@@ -1,6 +1,8 @@
 #! /bin/bash
 #
 # Creates a binary installation of ldc2 and ldmd2
+#
+# Test with env -i bash --noprofile --norc
 
 if [ "$1" == "--debug" ]; then
     DEBUG=-debug
