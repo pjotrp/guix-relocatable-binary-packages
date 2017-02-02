@@ -8,7 +8,8 @@ fi
 
 BIN=$(readlink -f ~/.guix-profile/bin/sambamba)
 if [ ! -z $DEBUG ]; then
-    BIN=/gnu/store/kywyw1q5cmblj30yskyrdmpn87059xi4-sambamba-0.6.6-pre1-91096e7/bin/sambamba
+    GUIXPATH=/gnu/store/z9imqq7aybingq831ij4wpd3j38xxzaf-sambamba-0.6.6-pre2-91096e7
+    BIN=$GUIXPATH/bin/sambamba
     SRC=/gnu/store/z6c5c9zxvk5glgwd519wkfmi399x5x7h-sambamba-0.6.6-pre1-91096e7-checkout
 fi
 HASH=$(basename $(dirname $(dirname $BIN)))
@@ -37,8 +38,8 @@ if [ ! -z $DEBUG ]; then
     # cp -vau /gnu/store/nkmjq0z2bhsfm8ii85xvdil24zd0h59k-sambamba-0.6.5-5a33d57-checkout $TDIR/source
     # cd $TDIR
     # tar rvf $TARBALL -h .
-    cd $CWD
-    tar rvf $TARBALL /gnu/store/164pirrwiciv9msg67qk7223x9j23bp6-ldc-1.1.0-beta6 /gnu/store/ykzwykkvr2c80rw4l1qh3mvfdkl7jibi-bash-4.3.42 /gnu/store/0mkxmwcykgz7dknap50wn4nfhh0kl8j4-tzdata-2015g
+    # cd $CWD
+    # tar rvf $TARBALL /gnu/store/164pirrwiciv9msg67qk7223x9j23bp6-ldc-1.1.0-beta6 /gnu/store/ykzwykkvr2c80rw4l1qh3mvfdkl7jibi-bash-4.3.42 /gnu/store/0mkxmwcykgz7dknap50wn4nfhh0kl8j4-tzdata-2015g
 fi
 
 if [ -z $DEBUG ]; then
