@@ -8,9 +8,9 @@ fi
 
 BIN=$(readlink -f ~/.guix-profile/bin/sambamba)
 if [ ! -z $DEBUG ]; then
-    GUIXPATH=/gnu/store/z9imqq7aybingq831ij4wpd3j38xxzaf-sambamba-0.6.6-pre2-91096e7
+    GUIXPATH=/gnu/store/s7l4l5jnrwvvyr3pva242yakvmbfpm06-sambamba-0.6.6-pre3-6ae174b
     BIN=$GUIXPATH/bin/sambamba
-    SRC=/gnu/store/z6c5c9zxvk5glgwd519wkfmi399x5x7h-sambamba-0.6.6-pre1-91096e7-checkout
+    SRC=/gnu/store/qwcnca8hcnd780q5hx0q3r0cmgy2zcvf-sambamba-0.6.6-pre3-6ae174b-checkout
 fi
 HASH=$(basename $(dirname $(dirname $BIN)))
 CWD=`pwd`
