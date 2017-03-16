@@ -7,6 +7,8 @@ if [ "$1" == "--debug" ]; then
 fi
 
 BIN=$(readlink -f ~/.guix-profile/bin/sambamba)
+SAMTOOLS_BIN=$(readlink -f ~/.guix-profile/bin/samtools)
+BCFTOOLS_BIN=$(readlink -f ~/.guix-profile/bin/bcftools)
 if [ ! -z $DEBUG ]; then
     GUIXPATH=/gnu/store/s7l4l5jnrwvvyr3pva242yakvmbfpm06-sambamba-0.6.6-pre3-6ae174b
     BIN=$GUIXPATH/bin/sambamba
@@ -18,6 +20,8 @@ CWD=`pwd`
 TARBALL=$CWD/$HASH$DEBUG-x86_64.tar
 tar cvf $TARBALL -h -C ../gnu-install-bin install.sh installer/
 ./bin/list-shared-libs $BIN|xargs tar -rvf $TARBALL
+./bin/list-shared-libs $SAMTOOLS_BIN|xargs tar -rvf $TARBALL
+./bin/list-shared-libs $BCFTOOLS_BIN|xargs tar -rvf $TARBALL
 
 if [ ! -z $DEBUG ]; then
     # This version creates a debug dir, but that is maybe not the best idea - need
